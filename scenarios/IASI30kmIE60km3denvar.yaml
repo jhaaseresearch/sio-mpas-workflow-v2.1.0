@@ -1,0 +1,81 @@
+workflow:
+  first cycle point: 20180414T18
+  #restart cycle point: 20180418T00
+  final cycle point:   20180415T06
+  #final cycle point: 20180514T18
+observations:
+  resource: PANDACArchive
+  resources:
+    PANDACArchive:
+      instrumentsAllowingBiasCorrection:
+      - iasi_metop-a
+      - iasi_metop-b
+      - iasi_metop-c
+      IODADirectory:
+        da:
+          iasi_metop-a: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/iasi/6h
+          iasi_metop-b: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/iasi/6h
+          iasi_metop-c: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/iasi/6h
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+        hofx:
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+      IODASuperObGrid:
+        abi_g16: 15X15
+        ahi_himawari8: 15X15
+experiment:
+  name: '3denvar_O30kmIE60km_WarmStart_IASI_6h_TEST_2-outer_60-inner'
+members:
+  n: 1
+model:
+  outerMesh: 30km
+  innerMesh: 60km
+  ensembleMesh: 60km
+firstbackground:
+  resource: "PANDAC.GFS"
+externalanalyses:
+  resource: "GFS.PANDAC"
+variational:
+  DAType: 3denvar
+  ensemble:
+    forecasts:
+      resource: "PANDAC.GEFS"
+  nInnerIterations: [60,60]
+  ensemble:
+    forecasts:
+      resource: "PANDAC.GEFS"
+  biasCorrection: True
+  tropprsMethod: thompson
+  observers: [
+    aircraft,
+    gnssrorefncep,
+    satwind,
+    satwnd,
+    sfc,
+    sondes,
+    amsua_aqua,
+    amsua_metop-a,
+    amsua_metop-b,
+    amsua_n15,
+    amsua_n18,
+    amsua_n19,
+    iasi_metop-b,
+  ]
+  job:
+    30km:
+      60km:
+        3denvar:
+          baseSeconds: 4500
+          nodes: 8
+          PEPerNode: 16
+          memory: 109GB
+hpc:
+  CriticalQueue: premium
+  NonCriticalQueue: premium
+verifyobs:
+  script directory: /glade/campaign/mmm/parc/ivette/pandac/graphics

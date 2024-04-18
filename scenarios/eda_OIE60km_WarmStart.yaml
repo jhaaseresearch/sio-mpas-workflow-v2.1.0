@@ -1,0 +1,43 @@
+workflow:
+  first cycle point: 20180414T18
+  #restart cycle point: 20180418T00
+  final cycle point:   20180415T06
+  #final cycle point: 20180514T18
+externalanalyses:
+  resource: "GFS.PANDAC"
+firstbackground:
+  resource: "PANDAC.LaggedGEFS"
+hofx:
+  maxIODAPoolSize: 3
+members:
+  n: 80
+model:
+  outerMesh: 60km
+  innerMesh: 60km
+  ensembleMesh: 60km
+observations:
+  resource: PANDACArchive
+  resources:
+    PANDACArchive:
+      IODADirectory:
+        da:
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+        hofx:
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+      IODASuperObGrid:
+        abi_g16: 15X15
+        ahi_himawari8: 15X15
+rtpp:
+  relaxationFactor: 0.7
+staticstream:
+  resource: "PANDAC.LaggedGEFS"
+variational:
+  DAType: 3denvar
+  SelfExclusion: True
+  maxIODAPoolSize: 3

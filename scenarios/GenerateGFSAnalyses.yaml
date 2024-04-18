@@ -1,0 +1,26 @@
+suite: GenerateExternalAnalyses
+externalanalyses:
+  resource: "GFS.RDA"
+experiment:
+  name: 'GenerateGFSAnalyses_TEST'
+  prefix: ''
+hpc:
+  CriticalQueue: economy
+  NonCriticalQueue: economy
+model:
+  outerMesh: 60km
+  GraphInfoDir: /glade/work/ivette/mpas_static_60kmduda-30kmjake
+workflow:
+  first cycle point: 20230106T12
+  final cycle point: 20230106T18 #20230117T00
+  max active cycle points: 60
+initic:
+  job:
+    30km:
+      seconds: 320
+      nodes: 6
+      PEPerNode: 32
+    60km:
+      seconds: 160
+      nodes: 3
+      PEPerNode: 32

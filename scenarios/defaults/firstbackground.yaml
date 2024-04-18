@@ -1,0 +1,82 @@
+firstbackground:
+  resources:
+    ## defaults:
+    # default resource values
+    # can be overridden in either a `common` or `{{mesh}}``-specific block
+    defaults:
+      ## directory: where background state(s) is(are) stored, possibly including {{prevDateTime}} string
+      directory: None
+
+      ## filePrefix: prefix of the background files
+      filePrefix: mpasout
+
+      ## maxMembers: maximum number of background members available for this resource
+      maxMembers: 1
+
+      ## memberFormat:
+      # python formatting string for memberDir function
+      # defaults to providing an empty member directory, i.e., for non-ensemble scenarios
+      memberFormat: " "
+
+      ## PrepareFirstBackground: mini-workflow that executes the R1 forecast
+      PrepareFirstBackground: None
+
+    ForecastFromAnalysis:
+      common:
+        PrepareFirstBackground: "ColdForecast:succeed-all => ForecastFinished__"
+
+    PANDAC:
+      GFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        120km: # only available 20180414T18, 20200723T18
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/120km/120km_1stCycle_background_single/{{FirstCycleDate}}"
+        60km: # only available 20180414T18, 20200723T18
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/60km/60km_1stCycle_background_single/{{FirstCycleDate}}"
+        30km: # only available 20180414T18
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/30km/30km_1stCycle_background_single/{{FirstCycleDate}}"
+      LaggedGEFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        120km: # only available 20180414T18, 20200723T18
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/fixed_input/120km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 80
+          memberFormat: "/{:02d}"
+        60km: # only available 20180414T18, 20200723T18
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/fixed_input/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 80
+          memberFormat: "/{:02d}"
+
+      GFS_4DEnVAR:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        120km:
+          directory: "/glade/campaign/mmm/parc/nystrom/pandac/120km_1stCycle_background_single/{{FirstCycleDate}}"
+
+    SIO:
+      GFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        30km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/30km/{{FirstCycleDate}}"
+        60km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/60km/{{thisValidDate}}"
+      GEFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        60km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+        30km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+
+      ERA5:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        30km: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/30km/{{FirstCycleDate}}"
+        60km: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}"   

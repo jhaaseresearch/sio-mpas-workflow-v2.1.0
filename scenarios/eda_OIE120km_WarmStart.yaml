@@ -1,0 +1,27 @@
+workflow:
+  first cycle point: 20180414T18
+  #restart cycle point: 20180418T00
+  final cycle point:   20180415T06
+  #final cycle point: 20180514T18
+externalanalyses:
+  resource: "GFS.PANDAC"
+firstbackground:
+  resource: "PANDAC.LaggedGEFS"
+hofx:
+  maxIODAPoolSize: 3
+members:
+  n: 20
+model:
+  outerMesh: 120km
+  innerMesh: 120km
+  ensembleMesh: 120km
+observations:
+  resource: PANDACArchive
+rtpp:
+  relaxationFactor: 0.8
+staticstream:
+  resource: "PANDAC.LaggedGEFS"
+variational:
+  DAType: 3denvar
+  SelfExclusion: True
+  maxIODAPoolSize: 3

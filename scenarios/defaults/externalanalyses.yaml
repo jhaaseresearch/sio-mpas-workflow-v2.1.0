@@ -1,0 +1,97 @@
+externalanalyses:
+  resources:
+    ## defaults:
+    # default resource values
+    # can be overridden in either a `common` or `{{mesh}}``-specific block
+    defaults:
+      ## directory (optional): location where pre-generated analyses are stored, if applicable
+      directory: None
+
+      ## filePrefix: prefix of analysis files
+      filePrefix: "x1.{{nCells}}.init"
+
+      ## Vtable: variable table for UngribExternalAnalysis
+      Vtable: None
+
+      ## UngribPrefix: prefix for ungribbed files
+      UngribPrefix: None  #GFS
+
+      ## PrepareExternalAnalysis
+      # a cylc dependency graph that generates analyses
+      # default behavior is to assume that analyses are already prepared offline
+      PrepareExternalAnalysisTasks:
+      - "LinkExternalAnalysis-{{mesh}}"
+      - "ExternalAnalysisReady__"
+
+      job:
+        # job settings for "Get*AnalysisFrom*" tasks
+        GetAnalysisFrom:
+          # cylc retry string
+          retry: '0*PT5S'
+
+    GFS:
+      PANDAC: # only available 20180415T00-20180525T00
+        120km:
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/120km/120km_GFSANA"
+        60km:
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/60km/60km_GFSANA"
+        30km:
+          directory: "/glade/campaign/mmm/parc/liuz/pandac_common/30km/30km_GFSANA"
+
+      SIO: # only available 20230218T18-20230220T18
+        30km:
+          #directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateGFSAnalyses/ExternalAnalyses/30km/{{thisValidDate}}"
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/30km/{{thisValidDate}}"
+        60km:
+          #directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateGFSAnalyses/ExternalAnalyses/60km/{{thisValidDate}}"
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/60km/{{thisValidDate}}"
+      RDA:
+        common:
+          PrepareExternalAnalysisTasks:
+          - "GetGFSAnalysisFromRDA"
+          - "UngribExternalAnalysis"
+          - "ExternalAnalysisToMPAS-{{mesh}}"
+          - "ExternalAnalysisReady__"
+          Vtable: /glade/work/nghido/mpas_static_60kmduda-30kmjake/Vtable.GFS.O3MR  #/glade/work/liuz/pandac/prepare_mpas/Vtable.GFS.O3MR
+          job:
+            GetAnalysisFrom:
+              retry: '1*PT20S'
+
+      NCEPFTP:
+        common:
+          PrepareExternalAnalysisTasks:
+          - "GetGFSAnalysisFromFTP"
+          - "UngribExternalAnalysis"
+          - "ExternalAnalysisToMPAS-{{mesh}}"
+          - "ExternalAnalysisReady__"
+          Vtable: /glade/work/nghido/mpas_static_60kmduda-30kmjake/Vtable.GFS.O3MR #/glade/work/liuz/pandac/prepare_mpas/Vtable.GFS.O3MR
+          job:
+            GetAnalysisFrom:
+              retry: '40*PT10M'
+    GDAS:
+      NCEPFTP:
+        common:
+          PrepareExternalAnalysisTasks:
+          - "GetGDASAnalysisFromFTP"
+          #Vtable: /glade/work/liuz/pandac/prepare_mpas/Vtable.GFS.O3MR
+          retry: '40*PT10M'
+
+    ERA5:
+      SIO: # only available 20230218T18-20230220T18
+        30km:
+          directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/30km/{{thisValidDate}}"
+        60km:
+          directory: "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}"
+
+      RDA:
+        common:
+          PrepareExternalAnalysisTasks:
+          - "GetERA5AnalysisFromRDA"
+          - "UngribERA5ExternalAnalysis"
+          - "ExternalAnalysisToMPAS-{{mesh}}"
+          - "ExternalAnalysisReady__"
+          Vtable: /glade/work/nghido/mpas_static_60kmduda-30kmjake/WPS/ungrib/Variable_Tables/Vtable.ECMWF
+          UngribPrefix: ERA5
+          job:
+            GetAnalysisFrom:
+              retry: '1*PT20S' 

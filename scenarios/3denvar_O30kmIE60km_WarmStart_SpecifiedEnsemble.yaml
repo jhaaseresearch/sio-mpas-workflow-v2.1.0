@@ -1,0 +1,58 @@
+workflow:
+  first cycle point: 20180414T18
+  final cycle point: 20180514T18
+
+members:
+  n: 1
+model:
+  outerMesh: 30km
+  innerMesh: 60km
+  ensembleMesh: 60km
+firstbackground:
+  resource: "PANDAC.GFS"
+externalanalyses:
+  resource: "GFS.PANDAC"
+variational:
+  DAType: 3denvar
+  nInnerIterations: [60,60,]
+
+## DART
+#  ensemble:
+#    forecasts:
+#      resource: "PANDAC.DART"
+#experiment:
+#  suffix: '_B-DART80'
+
+## EDA
+  ensemble:
+    forecasts:
+      resource: "PANDAC.EDA"
+experiment:
+  suffix: '_B-SE80+RTPP70'
+
+forecast:
+  job:
+    30km:
+      # more efficient
+      nodes: 4
+      PEPerNode: 36
+      baseSeconds: 60
+      secondsPerForecastHR: 150
+observations:
+  resource: PANDACArchive
+  resources:
+    PANDACArchive:
+      IODADirectory:
+        da:
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+        hofx:
+          abi_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          abi-clr_g16: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/ABIASR/IODANC_THIN15KM_SUPEROB15X15_no-bias-correct
+          ahi_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+          ahi-clr_himawari8: /glade/campaign/mmm/parc/liuz/pandac_common/obs/ioda_v3/2018/AHIASR/IODANC_SUPEROB15X15_no-bias-correct
+      IODASuperObGrid:
+        abi_g16: 15X15
+        ahi_himawari8: 15X15

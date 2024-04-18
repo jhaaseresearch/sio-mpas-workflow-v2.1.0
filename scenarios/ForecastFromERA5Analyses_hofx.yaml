@@ -1,0 +1,142 @@
+suite: ForecastFromExternalAnalyses
+build:
+  mpas bundle: /glade/p/mmm/parc/ivette/sio/codes-builds/internal/mpasBundle_2.0_aro_tl_ad_27Oct2023/build
+externalanalyses:
+  resource: "ERA5.RDA"
+experiment:
+  name: 'ForecastFromERA5Analyses_hofx'
+  prefix: ''
+
+extendedforecast:
+  meanTimes: T00,T06,T12,T18
+  lengthHR: 24
+  outIntervalHR: 06
+  execute: True # uncomment if forecasts are already completed
+  # optionally turn on extended forecast post
+  post: [verifyobs] #, verifymodel]
+
+#hpc:
+ # CriticalQueue: economy
+  #NonCriticalQueue: economy
+
+members:
+  n: 1
+
+model:
+  outerMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+hofx:
+  observations:
+  - gnssarobndropp2d
+  retainObsFeedback: True   #False
+  job:
+    60km:
+      seconds: 600
+      nodes: 3
+      PEPerNode: 32
+      memory: 109GB
+observations: # for optional verification
+  fixedTlapmeanCov: /glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2021
+  initialVARBCcoeff: /glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2021
+  resource: SIOArchive
+  resources:
+    SIOArchive:
+      IODADirectory:
+        da:
+          ##anchor
+          gnssarobndropp2d: /glade/scratch/nghido/hofx/obs/ioda_obs
+          gnssrobndropp2d: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndropp1d: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndnbam: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndmo: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrorefncep: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          aircraft: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          satwind: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          satwnd: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          sfc: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          sondes: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n15: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_aqua: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n15: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          ## mhs
+          mhs_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          ## abi
+          abi_g16: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          abi-clr_g16: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          ## ahi
+          ahi_himawari8: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          ahi-clr_himawari8: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          ## iasi
+          iasi_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          iasi_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          iasi_metop-c: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+        hofx:
+          # anchor
+          gnssarobndropp2d: /glade/scratch/nghido/hofx/obs/ioda_obs
+          aircraft: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndropp1d: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndnbam: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndmo: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrorefncep: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          satwind: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          satwnd: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          sfc: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          sondes: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          # amsua
+          amsua_aqua: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n15: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_aqua: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n15: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          amsua-cld_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          # mhs
+          mhs_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_n18: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          mhs_n19: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          # abi
+          abi_g16: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          abi-clr_g16: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+          # ahi
+          ahi_himawari8: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          ahi-clr_himawari8: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          # iasi
+          iasi_metop-a: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          iasi_metop-b: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+          iasi_metop-c: /glade/scratch/nghido/hofx/exp/GenerateObs/Observations
+
+workflow:
+  first cycle point: 20230218T18
+  final cycle point: 20230219T00
+  max active cycle points: 4

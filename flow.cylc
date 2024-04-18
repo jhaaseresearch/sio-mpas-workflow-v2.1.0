@@ -1,0 +1,617 @@
+
+
+# flow.cylc is automatically generated.  Modifying it directly will not give the
+#  intended result.  See Cycle class for implementation information.
+
+[meta]
+  title = MPAS-Workflow--nghido_3denvar_OIE60km_WarmStart_v2_aro_noROAS_03.09_Verification
+
+[scheduler]
+  UTC mode = False
+
+[scheduling]
+  initial cycle point = 20230218T18
+  final cycle point   = 20230218T18
+
+  # Maximum number of simultaneous active dates;
+  # useful for constraining non-blocking flows
+  # and to avoid over-utilization of login nodes
+  # hint: execute 'ps aux | grep $USER' to check your login node overhead
+  # default: 3
+  runahead limit = P59
+
+  [[queues]]
+
+    # externalanalyses
+    [[[LinkExternalAnalyses]]]
+      members = LinkExternalAnalyses
+      limit = 1
+    [[[PlaceHolder]]]
+      members = PlaceHolder
+      limit = 20
+    # initic
+    [[[PlaceHolder]]]
+      members = PlaceHolder
+      limit = 20
+    # observations
+    [[[PlaceHolder]]]
+      members = PlaceHolder
+      limit = 20
+
+  [[graph]]
+
+    # da
+    PT6H = """
+        ObsReady__ => PreDA__
+        ForecastFinished__[-PT6H] => PreDA__
+        PreDA__ => DAPost__
+        DAPost__ => DAFinished__
+        DAFinished__ => CleanDA
+      """
+    # forecast
+    +PT0H/PT6H = """
+        # ensure there is a valid sea-surface update file before forecast
+        LinkExternalAnalysis-60km => ExternalAnalysisReady__ => PreForecast__
+        DAFinished__[-PT0H] => PreForecast__
+        PreForecast__ => ForecastPost__
+        ForecastPost__ => ForecastFinished__
+        ForecastFinished__ => CleanForecast
+      """
+      PT6H = """
+        ForecastFinished__[-PT6H] => PreHofXBG-0hr__
+        ObsReady__ => PreHofXBG-0hr__
+        PreHofXBG-0hr__ => InitHofXBG-0hr
+        InitHofXBG-0hr:succeed-all => HofXBG-0hrExec
+        HofXBG-0hrExec:succeed-all => HofXBG-0hrPost__
+        HofXBG-0hrPost__ => HofXBG-0hrFinished__
+        HofXBG-0hrFinished__ => CleanHofXBG-0hr
+        HofXBG-0hrFamily:succeed-all => PreVerifyObsBG-0hr__
+        VerifyObsBG-0hrFamily:succeed-all => CleanHofXBG-0hr
+        ForecastFinished__[-PT6H] => PreVerifyObsBG-0hr__
+        ObsReady__ => PreVerifyObsBG-0hr__
+        PreVerifyObsBG-0hr__ => InitVerifyObsBG-0hr
+        InitVerifyObsBG-0hr:succeed-all => VerifyObsBG-0hrExec
+        VerifyObsBG-0hrExec:succeed-all => VerifyObsBG-0hrPost__
+        VerifyObsBG-0hrPost__ => VerifyObsBG-0hrFinished__
+        VerifyObsBG-0hrFinished__ => CleanVerifyObsBG-0hr
+        ForecastFinished__[-PT6H] => PreVerifyModelBG-0hr__
+        LinkExternalAnalysis-60km => ExternalAnalysisReady__ => PreVerifyModelBG-0hr__
+        PreVerifyModelBG-0hr__ => InitVerifyModelBG-0hr
+        InitVerifyModelBG-0hr:succeed-all => VerifyModelBG-0hrExec
+        VerifyModelBG-0hrExec:succeed-all => VerifyModelBG-0hrPost__
+        VerifyModelBG-0hrPost__ => VerifyModelBG-0hrFinished__
+        VerifyModelBG-0hrFinished__ => CleanVerifyModelBG-0hr
+        DAFinished__[-PT0H] => PreForecast__
+        """
+    # firstbackground
+    # extendedforecast
+
+[runtime]
+
+  [[root]]
+    pre-script = "cd  $origin/"
+    [[[environment]]]
+      origin = /glade/derecho/scratch/nghido/sio-cw3e/nghido_3denvar_OIE60km_WarmStart_v2_aro_noROAS_03.09_Verification/MPAS-Workflow
+    [[[events]]]
+      # prevents jobs from sitting in submitted state for longer than 'submission timeout'
+      submission timeout = PT90M
+      submission timeout handlers = cylc poll %(workflow)s '%(id)s:*'; sleep 20; cylc trigger %(workflow)s '%(id)s:*' ''']
+
+  [[BATCH]]
+    # load conda + activate /glade/work/jwittig/conda-envs/my-cylc8.2
+    init-script = '''
+source /etc/profile.d/z00_modules.sh
+module load conda//latest
+conda activate /glade/work/jwittig/conda-envs/my-cylc8.2
+
+'''
+    # default job and directives
+
+    execution time limit = PT3600S
+    platform = pbs_cluster
+    [[[directives]]]
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+
+  [[SingleBatch]]
+    # load conda + activate npl
+    init-script = '''
+source /etc/profile.d/z00_modules.sh
+module load conda/latest
+conda activate /glade/work/jwittig/conda-envs/my-cylc8.2
+'''
+    # default job and directives
+
+    execution time limit = PT3600S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = casper@casper-pbs
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -l select=1:ncpus=1:mpiprocs=1
+
+    # override submission timeout
+    [[[events]]]
+      submission timeout = PT3M
+
+  [[Clean]]
+    execution time limit = PT5M
+    execution retry delays = 2*PT15S
+
+  [[PlaceHolder]]
+  # benchmark
+  [[Compare]]
+
+    execution time limit = PT300S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+  # da
+  [[CleanVariationals]]
+    inherit = CleanDA
+    script = $origin/bin/CleanVariational.csh
+  [[DAFamily]]
+  [[PreDA__]]
+    inherit = DAFamily,PlaceHolder
+  [[DAPost__]]
+    inherit = DAFamily,PlaceHolder
+  [[DAFinished__]]
+    inherit = DAFamily,PlaceHolder
+  [[CleanDA]]
+    inherit = Clean
+  # forecast
+  [[Forecast]]
+    inherit = ForecastExec
+
+    execution time limit = PT1500S
+    execution retry delays = 0*PT30S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -m = ae
+      -l select=6:ncpus=32:mpiprocs=32:mem=235GB
+  [[Forecast1]]
+    inherit = Forecast, BATCH
+    script = $origin/bin/Forecast.csh "1" "6" "6" "False" "60km" "True" "False" "True" "CyclingFC/{{thisCycleDate}}" "CyclingDA/{{thisCycleDate}}/an" "an"
+  [[ForecastFamily]]
+  [[PreForecast__]]
+    inherit = ForecastFamily,PlaceHolder
+  [[ForecastExec]]
+    inherit = ForecastFamily
+  [[ForecastExec__]]
+    inherit = ForecastExec,PlaceHolder
+  [[ForecastPost__]]
+    inherit = ForecastFamily,PlaceHolder
+  [[ForecastFinished__]]
+    inherit = ForecastFamily,PlaceHolder
+  [[CleanForecast]]
+    inherit = Clean
+  [[VerifyObsBG-0hrExec00]]
+    inherit = VerifyObsBG-0hrExec, BATCH
+    script = $origin/bin/VerifyObs.csh "0" "Verification/bg/mean/{{thisCycleDate}}/diagnostic_stats/obs" "Verification/bg/mean/{{thisCycleDate}}/dbOut" "1" "hofx"
+
+    execution time limit = PT1220S
+    execution retry delays = 0*PT30S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -l select=1:ncpus=36:mpiprocs=36:mem=45GB
+  [[InitHofXBG-0hr00]]
+    inherit = InitHofXBG-0hr, SingleBatch
+    script = $origin/bin/PrepJEDI.csh "0" "hofx" "Verification/bg/mean/{{thisCycleDate}}" "6"
+    execution time limit = PT5M
+    execution retry delays = 0*PT30S
+  [[HofXBG-0hrExec00]]
+    inherit = HofXBG-0hrExec, BATCH
+    script = $origin/bin/HofX.csh "1" "0" "Verification/bg/mean/{{thisCycleDate}}" "CyclingFC/{{prevCycleDate}}" "mpasout"
+
+    execution time limit = PT600S
+    execution retry delays = 0*PT30S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -l select=3:ncpus=32:mpiprocs=32:mem=109GB
+  [[CleanHofXBG-0hr00]]
+    inherit = CleanHofXBG-0hr
+    script = $origin/bin/CleanHofX.csh "0" "Verification/bg/mean/{{thisCycleDate}}"
+  [[HofXBG-0hrFamily]]
+    inherit = HofXBG
+  [[HofXBG]]
+  [[PreHofXBG-0hr__]]
+    inherit = HofXBG-0hrFamily,PlaceHolder
+  [[InitHofXBG-0hr]]
+    inherit = HofXBG-0hrFamily
+  [[InitHofXBG-0hr__]]
+    inherit = InitHofXBG-0hr,PlaceHolder
+  [[HofXBG-0hrExec]]
+    inherit = HofXBG-0hrFamily
+  [[HofXBG-0hrExec__]]
+    inherit = HofXBG-0hrExec,PlaceHolder
+  [[HofXBG-0hrPost__]]
+    inherit = HofXBG-0hrFamily,PlaceHolder
+  [[HofXBG-0hrFinished__]]
+    inherit = HofXBG-0hrFamily,PlaceHolder
+  [[CleanHofXBG-0hr]]
+    inherit = Clean
+  [[VerifyObsBG-0hrFamily]]
+    inherit = VerifyObsBG
+  [[VerifyObsBG]]
+  [[PreVerifyObsBG-0hr__]]
+    inherit = VerifyObsBG-0hrFamily,PlaceHolder
+  [[InitVerifyObsBG-0hr]]
+    inherit = VerifyObsBG-0hrFamily
+  [[InitVerifyObsBG-0hr__]]
+    inherit = InitVerifyObsBG-0hr,PlaceHolder
+  [[VerifyObsBG-0hrExec]]
+    inherit = VerifyObsBG-0hrFamily
+  [[VerifyObsBG-0hrExec__]]
+    inherit = VerifyObsBG-0hrExec,PlaceHolder
+  [[VerifyObsBG-0hrPost__]]
+    inherit = VerifyObsBG-0hrFamily,PlaceHolder
+  [[VerifyObsBG-0hrFinished__]]
+    inherit = VerifyObsBG-0hrFamily,PlaceHolder
+  [[CleanVerifyObsBG-0hr]]
+    inherit = Clean
+  [[VerifyModelBG-0hrExec00]]
+    inherit = VerifyModelBG-0hrExec, BATCH
+    script = $origin/bin/VerifyModel.csh "0" "Verification/bg/mean/{{thisCycleDate}}/diagnostic_stats/model" "CyclingFC/{{prevCycleDate}}" "mpasout" "1"
+
+    execution time limit = PT580S
+    execution retry delays = 0*PT30S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -l select=1:ncpus=36:mpiprocs=36:mem=45GB
+  [[VerifyModelBG-0hrFamily]]
+    inherit = VerifyModelBG
+  [[VerifyModelBG]]
+  [[PreVerifyModelBG-0hr__]]
+    inherit = VerifyModelBG-0hrFamily,PlaceHolder
+  [[InitVerifyModelBG-0hr]]
+    inherit = VerifyModelBG-0hrFamily
+  [[InitVerifyModelBG-0hr__]]
+    inherit = InitVerifyModelBG-0hr,PlaceHolder
+  [[VerifyModelBG-0hrExec]]
+    inherit = VerifyModelBG-0hrFamily
+  [[VerifyModelBG-0hrExec__]]
+    inherit = VerifyModelBG-0hrExec,PlaceHolder
+  [[VerifyModelBG-0hrPost__]]
+    inherit = VerifyModelBG-0hrFamily,PlaceHolder
+  [[VerifyModelBG-0hrFinished__]]
+    inherit = VerifyModelBG-0hrFamily,PlaceHolder
+  [[CleanVerifyModelBG-0hr]]
+    inherit = Clean
+  [[ForecastFamily]]
+  # firstbackground
+  [[FirstBackgroundFamily]]
+  # extendedforecast
+  [[ExtendedForecast]]
+
+    execution time limit = PT48300S
+    execution retry delays = 0*PT30S
+    platform = pbs_cluster
+    [[[directives]]]
+      -q = main
+      -A = UCSD0047
+      -j = oe
+      -k = eod
+      -S = /bin/tcsh
+      -m = ae
+      -l select=6:ncpus=32:mpiprocs=32:mem=235GB
+  [[ExtendedForecastFamily]]
+  # externalanalyses
+  [[ExternalAnalysisReady__-0hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[ExternalAnalysisReady__]]
+    inherit = ExternalAnalysisReady__-0hr
+  [[LinkExternalAnalysis-60km-0hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "0" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[LinkExternalAnalysis-60km]]
+    inherit = LinkExternalAnalysis-60km-0hr
+  [[ExternalAnalysisReady__-12hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-12hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "12" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-24hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-24hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "24" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-36hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-36hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "36" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-48hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-48hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "48" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-60hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-60hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "60" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-72hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-72hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "72" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-84hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-84hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "84" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-96hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-96hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "96" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-108hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-108hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "108" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-120hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-120hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "120" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-132hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-132hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "132" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-144hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-144hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "144" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-156hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-156hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "156" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-168hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-168hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "168" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-180hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-180hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "180" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-192hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-192hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "192" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-204hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-204hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "204" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-216hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-216hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "216" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-228hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-228hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "228" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[ExternalAnalysisReady__-240hr]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[LinkExternalAnalysis-60km-240hr]]
+    inherit = LinkExternalAnalyses, SingleBatch
+    script = $origin/bin/LinkExternalAnalysis.csh "240" "ExternalAnalyses/60km/{{thisValidDate}}" "/glade/derecho/scratch/nghido/sio-cw3e/GenerateERA5Analyses/ExternalAnalyses/60km/{{thisValidDate}}" "x1.163842.init"
+    execution time limit = PT90S
+    execution retry delays = 5*PT30S
+    [[[events]]]
+      submission timeout = PT1M
+  [[LinkExternalAnalyses]]
+    inherit = ExternalAnalysesFamily
+  [[ExternalAnalysesFamily]]
+  [[PreExternalAnalyses__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[InitExternalAnalyses]]
+    inherit = ExternalAnalysesFamily
+  [[InitExternalAnalyses__]]
+    inherit = InitExternalAnalyses,PlaceHolder
+  [[ExternalAnalysesExec]]
+    inherit = ExternalAnalysesFamily
+  [[ExternalAnalysesExec__]]
+    inherit = ExternalAnalysesExec,PlaceHolder
+  [[ExternalAnalysesPost__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[ExternalAnalysesFinished__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[CleanExternalAnalyses]]
+    inherit = Clean
+  # initic
+  [[InitICFamily]]
+  [[PreInitIC__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[InitInitIC]]
+    inherit = ExternalAnalysesFamily
+  [[InitInitIC__]]
+    inherit = InitInitIC,PlaceHolder
+  [[InitICExec]]
+    inherit = ExternalAnalysesFamily
+  [[InitICExec__]]
+    inherit = InitICExec,PlaceHolder
+  [[InitICPost__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[InitICFinished__]]
+    inherit = ExternalAnalysesFamily,PlaceHolder
+  [[CleanInitIC]]
+    inherit = Clean
+  # observations
+  [[ObsReady__-0hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__]]
+    inherit = ObsReady__-0hr
+  [[ObsReady__-12hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-24hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-36hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-48hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-60hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-72hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-84hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-96hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-108hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-120hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-132hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-144hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-156hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-168hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-180hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-192hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-204hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-216hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-228hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObsReady__-240hr]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObservationsFamily]]
+  [[PreObservations__]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[InitObservations]]
+    inherit = ObservationsFamily
+  [[InitObservations__]]
+    inherit = InitObservations,PlaceHolder
+  [[ObservationsExec]]
+    inherit = ObservationsFamily
+  [[ObservationsExec__]]
+    inherit = ObservationsExec,PlaceHolder
+  [[ObservationsPost__]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[ObservationsFinished__]]
+    inherit = ObservationsFamily,PlaceHolder
+  [[CleanObservations]]
+    inherit = Clean

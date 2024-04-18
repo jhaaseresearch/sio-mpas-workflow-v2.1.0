@@ -1,0 +1,30 @@
+suite: GenerateExternalAnalyses
+
+externalanalyses:
+  resource: "ERA5.RDA" 
+experiment:
+  name: 'GenerateERA5Analyses_TEST'
+  prefix: ''
+hpc:
+  CriticalQueue: economy
+  NonCriticalQueue: economy
+build:
+  mpas bundle: /glade/work/nghido/derecho/mpas_bundle_v2.1_aro_fix/build 
+model:
+  outerMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+  
+workflow:
+  first cycle point: 20230218T06
+  final cycle point: 20230218T12 #20230228T18
+  max active cycle points: 60
+initic:
+  job:
+    30km:
+      seconds: 320
+      nodes: 6
+      PEPerNode: 32
+    60km:
+      seconds: 160
+      nodes: 3
+      PEPerNode: 32

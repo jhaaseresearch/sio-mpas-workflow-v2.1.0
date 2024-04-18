@@ -1,0 +1,21 @@
+experiment:
+  suffix: _GEFSVerify
+externalanalyses:
+  resource: "GFS.PANDAC"
+forecast:
+  execute: False
+firstbackground:
+  resource: "PANDAC.LaggedGEFS"
+model:
+  outerMesh: 120km
+  innerMesh: 120km
+  ensembleMesh: 120km
+members:
+  n: 20
+observations:
+  resource: PANDACArchive
+variational:
+  DAType: 3denvar
+  SelfExclusion: False
+  nInnerIterations: [,]
+  execute: False

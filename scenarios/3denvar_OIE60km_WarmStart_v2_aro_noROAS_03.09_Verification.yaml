@@ -1,0 +1,67 @@
+experiment:
+  name: '3denvar_OIE60km_WarmStart_v2_aro_noROAS_03.09_Verification'
+
+workflow:
+  first cycle point: 20230218T12
+  restart cycle point: 20230218T18
+  final cycle point: 20230218T18  #20230220T00
+  max active cycle points: 60
+
+build:
+  mpas bundle: /glade/work/nghido/derecho/mpas_bundle_v2.1_aro_fix/build
+
+members:
+  n: 1
+model:
+  outerMesh: 60km
+  innerMesh: 60km
+  ensembleMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+firstbackground:
+  resource: "SIO.GEFS"
+externalanalyses:
+  resource: "ERA5.SIO"
+variational:
+  execute: False
+  DAType: 3denvar
+  nInnerIterations: [60,60,]
+  biasCorrection: True
+  post: []
+  job:
+    60km:
+      3denvar:
+        nodes: 12
+        PEPerNode: 32
+        memory: 109GB
+        baseSeconds: 500
+        secondsPerEnVarMember: 290
+
+  ensemble:
+    forecasts:
+      resource: "SIO.GEFS"
+hofx:
+  job:
+    60km:
+      seconds: 600
+      nodes: 3
+      PEPerNode: 32
+      memory: 109GB
+forecast:
+  execute: False
+  job:
+    60km:
+      nodes: 6
+      PEPerNode: 32
+      baseSeconds: 300
+      secondsPerForecastHR: 200
+  post: [verifyobs, verifymodel] #
+initic:
+  job:
+    60km:
+      # use 128 PE to match partition file in GraphInfoDir
+      nodes: 4
+      PEPerNode: 32
+observations:
+  fixedTlapmeanCov: /glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2023
+  initialVARBCcoeff: /glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2023
+  resource: SIOArchive

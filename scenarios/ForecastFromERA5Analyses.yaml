@@ -1,0 +1,45 @@
+suite: ForecastFromExternalAnalyses
+build:
+  mpas bundle: /glade/work/nghido/derecho/mpas_bundle_v2.1_aro_fix/build
+externalanalyses:
+  resource: "ERA5.RDA"
+experiment:
+  name: 'ForecastFromERA5Analyses'
+  prefix: ''
+
+extendedforecast:
+  meanTimes: T00,T06,T12,T18
+  lengthHR: 06
+  outIntervalHR: 06
+  execute: True # uncomment if forecasts are already completed
+  # optionally turn on extended forecast post
+  post: [] #[verifyobs, verifymodel]
+
+hpc:
+  CriticalQueue: economy
+  NonCriticalQueue: economy
+
+members:
+  n: 1
+
+model:
+  outerMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+hofx:
+  observations:
+  - gnssarobndropp2d
+  retainObsFeedback: True   #False
+  job:
+    60km:
+      seconds: 600
+      nodes: 3
+      PEPerNode: 32
+      memory: 109GB
+observations: # for optional verification
+  fixedTlapmeanCov: /glade/work/nghido/derecho/SATBIAS_fixed/2023
+  initialVARBCcoeff: /glade/work/nghido/derecho/SATBIAS_fixed/2023
+  resource: SIOArchive
+workflow:
+  first cycle point: 20230220T06  #20230218T18
+  final cycle point: 20230224T00  #20230220T00
+  max active cycle points: 4

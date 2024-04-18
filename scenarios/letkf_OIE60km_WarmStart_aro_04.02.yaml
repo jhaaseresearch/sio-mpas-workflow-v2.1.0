@@ -1,0 +1,147 @@
+experiment:
+  name: 'letkf_OIE60km_WarmStart_aro_04.02'
+build:
+  mpas bundle: /glade/work/nghido/derecho/mpas_bundle_v2.1_aro_fix/build
+workflow:
+  first cycle point: 20230218T12
+  #restart cycle point: 20230219T00
+  final cycle point: 20230218T18  #20230220T00
+
+members:
+  n: 30
+enkf:
+  ##execute: False
+  solver: LETKF
+  localization dimension: 3D
+  horizontal localization lengthscale: 1.2e6
+  vertical localization lengthscale: 6.e3
+  retainObsFeedback: True
+  biasCorrection: True
+  post: []
+  job:
+    60km:
+      LETKF:
+        observer:
+          # cost for record (20 members, PBS JOB email)
+          # 2 x 32 PE : 3.3 min., 50.0 GB (single precision)
+          nodes: 4 #6 #2 #6
+          PEPerNode: 32
+          memory: 109GB
+          baseSeconds: 200 #100
+          secondsPerMember: 10 #7 #50 #7 #20
+        solver:
+          # cost for record (20 members, PBS JOB email, single precision)
+          # 16 x 32 PE, 3d iterator : 83.6 min., 275 GB
+          # 16 x 32 PE, 3d iterator (no vert loc.) : 108 min., 314 GB
+          # 16 x 32 PE, 2d iterator (no vert loc.) : 7.5 min., 274 GB
+          nodes: 16   #16
+          PEPerNode: 32
+          threads: 1
+          memory: 109GB #274GB #109GB
+          baseSeconds: 400
+          secondsPerMember: 290 #400 #240 #350 #290
+  observers: [
+    aircraft,
+    satwind,
+    satwnd,
+    sfc,
+    sondes,
+#    gnssrobndropp1d,
+    gnssrobndropp2d,
+    gnssarobndropp2d, 
+#    amsua_aqua,
+#    amsua_metop-a,
+    amsua_metop-b,
+    amsua_n15,
+    amsua_n18,
+    amsua_n19,
+  ]
+externalanalyses:
+  resource: "GFS.SIO"
+firstbackground:
+  resource: "SIO.GEFS"
+forecast:
+  post: []  #[verifyobs, verifymodel] #
+  job:
+    60km:
+      nodes: 6 #3 #2
+      PEPerNode: 32 #36
+      baseSeconds: 140 #60
+      secondsPerForecastHR: 60 #40
+hofx:
+  retainObsFeedback: True   #False
+  job:
+    60km:
+      seconds: 600
+      nodes: 3
+      PEPerNode: 32
+      memory: 109GB
+model:
+  outerMesh: 60km
+  # TODO: make inner and ensemble meshes unnecessary
+  # related to {{PrepareExternalAnalysisInner}} and {{PrepareExternalAnalysisEnsemble}}
+  innerMesh: 60km
+  ensembleMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+observations:
+  fixedTlapmeanCov: /glade/work/nghido/derecho/SATBIAS_fixed/2023   #/glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2021
+  initialVARBCcoeff: /glade/work/nghido/derecho/SATBIAS_fixed/2023/  #/glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2021
+  resource: SIOArchive
+  resources:
+    SIOArchive:
+      instrumentsAllowingBiasCorrection:
+      - amsua_aqua
+      - amsua_metop-a
+      - amsua_metop-b
+      - amsua_metop-c
+      - amsua_n15
+      - amsua_n18
+      - amsua_n19
+      IODADirectory:
+        da:
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+        hofx:
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+rtpp:
+  relaxationFactor: 0.8

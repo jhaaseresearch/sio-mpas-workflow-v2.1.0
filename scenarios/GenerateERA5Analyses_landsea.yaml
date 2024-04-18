@@ -1,0 +1,30 @@
+suite: GenerateExternalAnalyses
+
+externalanalyses:
+  resource: "ERA5.RDA" 
+experiment:
+  name: 'GenerateERA5Analyses_landsea'
+  prefix: ''
+build:
+  mpas bundle: /glade/p/mmm/parc/ivette/sio/codes-builds/internal/mpasBundle_2.0_aro_tl_ad_27Oct2023/build #/glade/p/mmm/parc/ivette/sio/codes-builds/internal/build_mpas-bundle_2.0_aro
+hpc:
+  CriticalQueue: premium #economy
+  NonCriticalQueue: premium #economy
+model:
+  outerMesh: 60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+  
+workflow:
+  first cycle point: 19790101T00 #20230218T18
+  final cycle point: 19790101T00 #20230218T18  #20230219T00
+  max active cycle points: 60
+initic:
+  job:
+    30km:
+      seconds: 320
+      nodes: 6
+      PEPerNode: 32
+    60km:
+      seconds: 160
+      nodes: 3
+      PEPerNode: 32

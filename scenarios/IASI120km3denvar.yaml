@@ -1,0 +1,69 @@
+workflow:
+  first cycle point: 20180414T18
+  final cycle point: 20180415T06
+observations:
+  resource: PANDACArchive
+  resources:
+    PANDACArchive:
+      instrumentsAllowingBiasCorrection:
+      - iasi_metop-a
+      - iasi_metop-b
+      - iasi_metop-c
+      IODADirectory:
+        da:
+          iasi_metop-a: /glade/campaign/mmm/parc/ivette/pandac/Observations/iasi/6h
+          iasi_metop-b: /glade/campaign/mmm/parc/ivette/pandac/Observations/iasi/6h
+          iasi_metop-c: /glade/campaign/mmm/parc/ivette/pandac/Observations/iasi/6h
+experiment:
+  name: '3denvar_OIE120km_WarmStart_IASI'
+members:
+  n: 1
+model:
+  outerMesh: 120km
+  innerMesh: 120km
+  ensembleMesh: 120km
+firstbackground:
+  resource: "PANDAC.GFS"
+externalanalyses:
+  resource: "GFS.PANDAC"
+variational:
+  DAType: 3denvar
+  nInnerIterations: [60,]
+  ensemble:
+    forecasts:
+      resource: "PANDAC.GEFS"
+  biasCorrection: True
+  tropprsMethod: thompson
+  observers: [
+    aircraft,
+    gnssrorefncep,
+    satwind,
+    satwnd,
+    sfc,
+    sondes,
+    amsua_aqua,
+    amsua_metop-a,
+    amsua_metop-b,
+    amsua_n15,
+    amsua_n18,
+    amsua_n19,
+    iasi_metop-b,
+  ]
+  # for a 6h obs file
+  job:
+    120km:
+      120km:
+        3denvar:
+          baseSeconds: 900
+          nodes: 8
+          PEPerNode: 16
+          memory: 109GB
+hpc:
+  CriticalQueue: premium
+  NonCriticalQueue: premium
+verifyobs:
+  script directory: /glade/campaign/mmm/parc/ivette/pandac/graphics
+hofx:
+  job:
+    120km:
+      seconds: 500

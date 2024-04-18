@@ -1,0 +1,24 @@
+suite: GenerateObs
+
+observations:
+  resource: GladeRDAOnline
+  convertToIODAObservations:
+  - 1bamua
+  #- 1bmhs
+  - airsev
+  #- cris
+  - gpsro
+  #- mtiasi
+  - prepbufr
+  - satwnd
+experiment:
+  name: 'GenerateObs_TEST'
+  prefix: ''
+hpc:
+  CriticalQueue: economy
+  NonCriticalQueue: economy
+workflow:
+  first cycle point: 20210122T18
+  final cycle point: 20210204T18
+
+  max active cycle points: 60
