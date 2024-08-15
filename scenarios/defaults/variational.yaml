@@ -112,6 +112,20 @@ variational:
             #  zero padding: 3
             #  nmembers: 80
 
+      SIO:
+        GEFS:
+          60km:
+            maxMembers: 30
+            directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsForCov/{{prevDateTime}}'
+            memberPrefix:
+            memberNDigits: 2
+          30km:
+            maxMembers: 30
+            directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsForCov/{{prevDateTime}}'
+            memberPrefix:
+            memberNDigits: 2
+
+
     # externally-produced localization files
     localization:
       #{{ensembleMesh}}:
@@ -187,6 +201,116 @@ variational:
     # memmbers) than is available in default resource requests below, use more nodes and keep
     # the product of (nodes x PEPerNode) constant. If (nodes x PEPerNode) is modifed, new
     # localization or covariance files may be needed.
+    60-10km-wsm6:
+      # Assuming 120 total inner iterations
+      30km:
+        3denvar:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+        4denvar:
+          nodes: 28
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 1500
+          secondsPerEnVarMember: 5
+        3dvar:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+          baseSeconds: 1500
+        ensemble: # i.e., EDASize > 1, multiple background members treated per executable
+          3denvar:
+            nodesPerMember: 4
+            PEPerNode: 128
+            memory: 235GB
+            baseSeconds: 1200
+            secondsPerEnVarMember: 10
+      60km:
+        3denvar:
+          nodes: 4 #2
+          PEPerNode: 64 #128
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 9
+        4denvar:
+          nodes: 14
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 24
+        3dhybrid:
+          nodes: 2
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 500
+          secondsPerEnVarMember: 9
+        3dhybrid-allsky:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 9
+        3dvar:
+          nodes: 2
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 500
+    60-10km-thompson:
+      # Assuming 120 total inner iterations
+      30km:
+        3denvar:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+        4denvar:
+          nodes: 28
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 1500
+          secondsPerEnVarMember: 5
+        3dvar:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+          baseSeconds: 1500
+        ensemble: # i.e., EDASize > 1, multiple background members treated per executable
+          3denvar:
+            nodesPerMember: 4
+            PEPerNode: 128
+            memory: 235GB
+            baseSeconds: 1200
+            secondsPerEnVarMember: 10
+      60km:
+        3denvar:
+          nodes: 4 #2
+          PEPerNode: 64 #128
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 9
+        4denvar:
+          nodes: 14
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 24
+        3dhybrid:
+          nodes: 2
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 500
+          secondsPerEnVarMember: 9
+        3dhybrid-allsky:
+          nodes: 4
+          PEPerNode: 64
+          memory: 235GB
+          baseSeconds: 800
+          secondsPerEnVarMember: 9
+        3dvar:
+          nodes: 2
+          PEPerNode: 128
+          memory: 235GB
+          baseSeconds: 500
     60-3km:
       # Assuming 120 total inner iterations
       30km:
@@ -301,11 +425,11 @@ variational:
       # Assuming 60 total inner iterations
       60km:
         3denvar:
-          nodes: 2
-          PEPerNode: 128
+          nodes: 4 #2
+          PEPerNode: 64 #128
           memory: 235GB
-          baseSeconds: 200
-          secondsPerEnVarMember: 6
+          baseSeconds: 800 #200
+          secondsPerEnVarMember: 9 #6
         4denvar:
           nodes: 14 #7 subwindow slots
           PEPerNode: 128

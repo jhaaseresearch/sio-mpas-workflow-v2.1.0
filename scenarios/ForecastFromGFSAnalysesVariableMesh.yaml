@@ -1,22 +1,22 @@
 suite: ForecastFromExternalAnalyses
 
 externalanalyses:
-  resource: "GFS.PANDAC"
+  resource: "GFS.SIO"
 
 experiment:
-  name: 'ColdStart_clean2.1'
+  name: 'GFS_ForecastFromExternalAnalyses_60-10km-wsm6'
   prefix: ''
 
 build:
-  mpas bundle: /glade/derecho/scratch/bjung/saca/mpas-bundle.modif2_bugfix.traj_fix/build_single
+  mpas bundle: /glade/work/nghido/mmm/mpasBundle_2.1_SP_cloud-seeding-aro/build
 
 extendedforecast:
-  meanTimes: T00
-  lengthHR: 18
+  meanTimes: T00,T06,T12,T18
+  lengthHR: 06
   outIntervalHR: 1
-  execute: False # uncomment if forecasts are already completed
+  execute: True # uncomment if forecasts are already completed
   # optionally turn on extended forecast post
-  post: [verifyobs] #verifyobs, verifymodel
+  post: [] #[verifyobs] #verifyobs, verifymodel
 
 hofx:
   observers: [
@@ -33,14 +33,14 @@ members:
   n: 1
 
 model:
-  outerMesh: 60-3km
+  outerMesh: 60-10km-wsm6 #60-10km-thompson #60-3km
   innerMesh: 60km
-  GraphInfoDir: /glade/campaign/mmm/parc/ivette/pandac/all_graph
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
 
 observations: # for optional verification
-  resource: SacaObs
+  resource: PANDACArchiveForVarBC
 
 workflow:
-  first cycle point: 20180424T00
-  final cycle point: 20180425T00
+  first cycle point: 20230218T12
+  final cycle point: 20230220T00
   max active cycle points: 16

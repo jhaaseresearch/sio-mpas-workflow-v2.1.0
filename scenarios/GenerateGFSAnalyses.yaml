@@ -1,24 +1,24 @@
 suite: GenerateExternalAnalyses
 
 externalanalyses:
-  resource: "GFS.GFS_ungrib"
+  resource: "GFS.RDA"
 
 build:
-  mpas bundle: /glade/campaign/mmm/parc/ivette/pandac/codeBuild/mpasBundle_2.1_SP_cloud-seeding/mpas-bundle/build2
+  mpas bundle: /glade/work/nghido/mmm/mpasBundle_2.1_SP_cloud-seeding-aro/build
 
 experiment:
-  name: 'GenerateGFSAnalyses_60-3km_GWD'
+  name: 'GenerateGFSAnalyses_60-10km-wsm6'
   prefix: ''
 
-hpc:
-  CriticalQueue: economy
-  NonCriticalQueue: economy
+  #hpc:
+  #CriticalQueue: economy
+  #NonCriticalQueue: economy
 
 model:
-  outerMesh: 60-3km
-  GraphInfoDir: /glade/campaign/mmm/parc/ivette/pandac/all_graph
+  outerMesh: 60-10km-wsm6 #60-10km-thompson
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
 
 workflow:
-  first cycle point: 20180415T00
-  final cycle point: 20180525T00
+  first cycle point: 20230223T00 #20230220T00 #20230218T06 #20230218T12
+  final cycle point: 20230224T00 #20230220T00
   max active cycle points: 20

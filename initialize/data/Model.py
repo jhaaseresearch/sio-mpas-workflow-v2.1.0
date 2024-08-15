@@ -33,7 +33,7 @@ class Model(Component):
   defaults = 'scenarios/defaults/model.yaml'
   # mesh descriptors, e.g.:
   # uniform spacing: 30km, 60km, 120km
-  # variable spacing: 60-3km
+  # variable spacing: 60-3km, 60-10km-thompson, 60-10km-wsm6
 
   requiredVariables = {
   }
@@ -66,7 +66,8 @@ class Model(Component):
 
     ## MPThompsonTablesDir
     # directory containing MP Thompson tables
-    'MPThompsonTablesDir': ['/glade/campaign/mmm/parc/ivette/pandac/saca/thompson_tables',str],
+    #'MPThompsonTablesDir': ['/glade/campaign/mmm/parc/ivette/pandac/saca/thompson_tables',str],
+    'MPThompsonTablesDir': ['/glade/work/nghido/mmm/mpas_forecast/thompson_tables',str],
   }
 
   def __init__(self, config:Config):

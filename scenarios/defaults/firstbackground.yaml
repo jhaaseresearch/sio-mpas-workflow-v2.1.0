@@ -54,3 +54,48 @@ firstbackground:
           PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
         120km:
           directory: "/glade/campaign/mmm/parc/nystrom/pandac/120km_1stCycle_background_single/{{FirstCycleDate}}"
+
+    SIO:
+      GFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+          #30km: # only available 20230218T18
+          #  directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/30km/{{FirstCycleDate}}"
+          #60km: # only available 20230218T18
+          #directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/60km/{{FirstCycleDate}}"
+        60km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+        30km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+        60-10km-thompson: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-thompson/ExtendedFC/{{FirstCycleDate}}/mean" #"/glade/derecho/scratch/nghido/sio-mmm/model_integration_thompson"
+        60-10km-wsm6: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-wsm6/ExtendedFC/{{FirstCycleDate}}/mean" #"/glade/derecho/scratch/nghido/sio-mmm/model_integration_wsm6"
+      GEFS:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        60km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+        30km: # only available 20230218T18
+          directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+
+      ERA5:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        30km: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateERA5Analyses_30km-wsm6/ExternalAnalyses/30km/{{FirstCycleDate}}"
+        60km: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateERA5Analyses_60km-wsm6/ExternalAnalyses/60km/{{thisValidDate}}"
+        60-10km-thompson: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateERA5Analyses_60-10km-thompson/ExternalAnalyses/60-10km-thompson/{{thisValidDate}}"
+        60-10km-wsm6: # only available 20230218T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateERA5Analyses_60-10km-wsm6/ExternalAnalyses/60-10km-wsm6/{{thisValidDate}}"
+

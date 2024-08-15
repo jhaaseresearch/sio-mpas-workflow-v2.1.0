@@ -36,6 +36,8 @@ class HofX(Component):
       # anchor
       'aircraft',
       'gnssrobndropp1d',
+      'gnssrobndropp2d',
+      'gnssarobndropp2d',
       #'gnssrobndnbam',
       #'gnssrobndmo',
       #'gnssrobndmo-nopseudo',

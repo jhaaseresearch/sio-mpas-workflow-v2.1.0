@@ -26,6 +26,28 @@ forecast:
       PEPerNode: 128
       baseSeconds: 60
       secondsPerForecastHR: 300 #240 for calling radiation every 30 minutes
+    60-10km-thompson:
+      # faster turnaround
+      #nodes:
+      #PEPerNode:
+      #baseSeconds: 60
+      #secondsPerForecastHR: 120
+      # more efficient
+      nodes: 4
+      PEPerNode: 128
+      baseSeconds: 60
+      secondsPerForecastHR: 300 #240 for calling radiation every 30 minutes
+    60-10km-wsm6:
+      # faster turnaround
+      #nodes:
+      #PEPerNode:
+      #baseSeconds: 60
+      #secondsPerForecastHR: 120
+      # more efficient
+      nodes: 4
+      PEPerNode: 128
+      baseSeconds: 60
+      secondsPerForecastHR: 300 #240 for calling radiation every 30 minutes
     30km:
       # faster turnaround
       #nodes: 16

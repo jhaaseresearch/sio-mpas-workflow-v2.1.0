@@ -18,6 +18,14 @@ initic:
       seconds: 320
       nodes: 4
       PEPerNode: 36
+    60-10km-thompson:
+      seconds: 320
+      nodes: 4
+      PEPerNode: 36
+    60-10km-wsm6:
+      seconds: 320
+      nodes: 4
+      PEPerNode: 36
     30km:
       seconds: 320
       nodes: 4

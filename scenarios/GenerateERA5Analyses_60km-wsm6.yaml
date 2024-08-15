@@ -1,0 +1,24 @@
+suite: GenerateExternalAnalyses
+
+externalanalyses:
+  resource: "ERA5.RDA"
+
+build:
+  mpas bundle: /glade/work/nghido/mmm/mpasBundle_2.1_SP_cloud-seeding-aro/build
+
+experiment:
+  name: 'GenerateERA5Analyses_60km-wsm6'
+  prefix: ''
+
+  #hpc:
+  #CriticalQueue: economy
+  #NonCriticalQueue: economy
+
+model:
+  outerMesh: 60km #60-10km-wsm6 #60-10km-thompson
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+
+workflow:
+  first cycle point: 20230220T00 #20230218T06 #20230218T12
+  final cycle point: 20230224T00 ##20230218T12 #20230220T00
+  max active cycle points: 20

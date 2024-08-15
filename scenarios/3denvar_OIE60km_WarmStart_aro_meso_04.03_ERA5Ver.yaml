@@ -1,0 +1,137 @@
+# settings borrowed from /glade/work/liuz/pandac_hybrid/amsua_clrsky
+experiment:
+  name: '3denvar_OIE60km_WarmStart_aro_meso_04.03_ERA5Ver'
+  #prefix: ''
+
+workflow:
+  first cycle point: 20230218T12
+  restart cycle point: 20230218T18
+  final cycle point: 20230220T00
+  #CyclingWindowHR: 24 # default is 6 for cycling DA
+  max active cycle points: 16 # used for independent 'extendedforecast' 
+
+build:
+  mpas bundle: /glade/work/nghido/mmm/mpasBundle_2.1_SP_cloud-seeding-aro/build
+  
+firstbackground:
+  resource: "SIO.GFS"
+
+externalanalyses:
+  resource: "ERA5.SIO"
+
+extendedforecast:
+  meanTimes: T00 #,T12 # uncomment to enable extended forecast verification
+  lengthHR: 18
+  outIntervalHR: 1
+  execute: False # uncomment if forecasts are already completed
+  # optionally enable extended forecast post (requires meanTimes to be set)
+  post: []  #verifyobs, verifymodel
+
+members:
+  n: 1
+
+model:
+  outerMesh: 60km
+  innerMesh: 60km
+  ensembleMesh:  60km
+  GraphInfoDir: /glade/work/nghido/mpas_static_60kmduda-30kmjake
+
+variational:
+  execute: False
+  DAType: 3denvar
+  nInnerIterations: [60,60,]
+  biasCorrection: True
+  post: [] #[verifyobs] #
+  observers: [
+    aircraft,
+    gnssrobndropp2d,
+    satwind,
+    satwnd,
+    sfc,
+    sondes,
+    #amsua_aqua,
+    #amsua_metop-a,
+    amsua_metop-b,
+    #amsua_metop-c,
+    amsua_n15,
+    amsua_n18,
+    amsua_n19,
+    # mhs_metop-a,
+   # mhs_metop-b,
+   # mhs_metop-c,
+   # mhs_n18,
+   # mhs_n19,
+    gnssarobndropp2d,
+  ]
+  ensemble:
+    forecasts:
+      resource: "SIO.GEFS"
+  concatenateObsFeedback: True
+hofx:
+  concatenateObsFeedback: True
+  IRVISlandCoeff: IGBP
+forecast:
+  execute: False
+  post: [verifymodel] #[verifyobs, verifymodel] #
+
+observations:
+  fixedTlapmeanCov: /glade/work/nghido/derecho/SATBIAS_fixed/2023  #/glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2023
+  initialVARBCcoeff: /glade/work/nghido/derecho/SATBIAS_fixed/2023/  #/glade/p/mmm/parc/ivette/sio/SATBIAS_fixed/2023
+  resource: SIOArchive
+  resources:
+    SIOArchive:
+      instrumentsAllowingBiasCorrection:
+      - amsua_aqua
+      - amsua_metop-a
+      - amsua_metop-b
+      - amsua_metop-c
+      - amsua_n15
+      - amsua_n18
+      - amsua_n19
+      IODADirectory:
+        da:
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+        hofx:
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+

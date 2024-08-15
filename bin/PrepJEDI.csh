@@ -1162,7 +1162,7 @@ if ("$ArgAppType" == variational) then
     mkdir -p ${an}
     set anFile = ${an}/${ANFilePrefix}.$thisMPASFileDate.nc
     rm ${anFile}
-    if ("$outerMesh" == "60-3km") then
+    if ("$outerMesh" == "60-3km" || "$outerMesh" == "60-10km-thompson" || "$outerMesh" == "60-10km-wsm6") then
       cp -v ${bgFile} ${anFile}.bak
     else
       cp -v ${bgFile} ${anFile}

@@ -616,3 +616,139 @@ observations:
       IODASuperObGrid:
         abi_g16: 15X15
         ahi_himawari8: 15X15
+
+    SIOArchive:
+      PrepareObservationsTasks: [ObsReady__]
+
+      instrumentsAllowingBiasCorrection:
+      - amsua_aqua
+      - amsua_metop-a
+      - amsua_metop-b
+      - amsua_metop-c
+      - amsua_n15
+      - amsua_n18
+      - amsua_n19
+      - iasi_metop-a
+      - iasi_metop-b
+      - iasi_metop-c
+
+      IODAPrefix:
+        gnssarobndropp2d: gnssaro
+        gnssrobndropp2d: gnssro
+        gnssrobndropp1d: gnssro
+        gnssrobndnbam: gnssro
+        gnssrobndmo: gnssro
+        gnssrobndmo-nopseudo: gnssro
+        gnssrorefncep: gnssro
+        gnssrorefncep_tunedErrors: gnssro
+        amsua-cld_aqua: amsua_aqua
+        amsua-cld_metop-a: amsua_metop-a
+        amsua-cld_metop-b: amsua_metop-b
+        amsua-cld_n15: amsua_n15
+        amsua-cld_n18: amsua_n18
+        amsua-cld_n19: amsua_n19
+        abi-clr_g16: abi_g16
+        ahi-clr_himawari8: ahi_himawari8
+
+      IODADirectory:
+        da:
+          ##anchor
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## mhs
+          mhs_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## abi
+          abi_g16: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          abi-clr_g16: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## ahi
+          ahi_himawari8: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          ahi-clr_himawari8: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## iasi
+          iasi_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          iasi_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          iasi_metop-c: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+        hofx:
+          ## anchor
+          gnssarobndropp2d: /glade/work/nghido/data/aro/ori/2022.305_ar2023_r47t/ioda_obs
+          gnssrobndropp2d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          aircraft: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndropp1d: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndnbam: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrobndmo-nopseudo: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          gnssrorefncep_tunedErrors: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwind: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          satwnd: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sfc: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          sondes: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## amsua
+          amsua_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_aqua: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n15: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          amsua-cld_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## mhs
+          mhs_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_n18: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          mhs_n19: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## abi
+          abi_g16: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          abi-clr_g16: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## ahi
+          ahi_himawari8: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          ahi-clr_himawari8: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+          ## iasi
+          iasi_metop-a: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          iasi_metop-b: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+          iasi_metop-c: /glade/derecho/scratch/nghido/sio-cw3e/GenerateObs/Observations
+
+      IODASuperObGrid:
+        abi_g16: 59X59
+        ahi_himawari8: 101X101  

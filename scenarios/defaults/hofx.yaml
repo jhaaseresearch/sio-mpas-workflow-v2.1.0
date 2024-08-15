@@ -20,6 +20,16 @@ hofx:
       nodes: 2
       PEPerNode: 64
       memory: 235GB
+    60-10km-thompson:
+      seconds: 600
+      nodes: 2
+      PEPerNode: 64
+      memory: 235GB
+    60-10km-wsm6:
+      seconds: 600
+      nodes: 2
+      PEPerNode: 64
+      memory: 235GB
     30km:
       seconds: 600
       nodes: 2

@@ -25,6 +25,8 @@ benchmarkObservations = [
   'aircraft',
 #  'gnssrorefncep',
   'gnssrobndropp1d',
+  'gnssrobndropp2d',
+  'gnssarobndropp2d',
   'satwind',
   'satwnd',
   'sfc',

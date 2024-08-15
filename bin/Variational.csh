@@ -115,7 +115,7 @@ if ( $status != 0 ) then
   exit 1
 endif
 
-if ("$outerMesh" == "60-3km") then
+if ("$outerMesh" == "60-3km" || "$outerMesh" == "60-10km-thompson" || "$outerMesh" == "60-10km-wsm6") then
   # Update state variables of analysis
   set an = $CyclingDAOutDirs[$ArgMember]
   set anFile = ${ANFilePrefix}.$thisMPASFileDate.nc
