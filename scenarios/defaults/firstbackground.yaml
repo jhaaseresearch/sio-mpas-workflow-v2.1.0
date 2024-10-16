@@ -59,10 +59,6 @@ firstbackground:
       GFS:
         common:
           PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
-          #30km: # only available 20230218T18
-          #  directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/30km/{{FirstCycleDate}}"
-          #60km: # only available 20230218T18
-          #directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GenerateGFSAnalyses/ExternalAnalyses/60km/{{FirstCycleDate}}"
         60km: # only available 20230218T18
           directory: "/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
           maxMembers: 30
@@ -75,6 +71,22 @@ firstbackground:
           directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-thompson/ExtendedFC/{{FirstCycleDate}}/mean" #"/glade/derecho/scratch/nghido/sio-mmm/model_integration_thompson"
         60-10km-wsm6: # only available 20230218T18
           directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-wsm6/ExtendedFC/{{FirstCycleDate}}/mean" #"/glade/derecho/scratch/nghido/sio-mmm/model_integration_wsm6"
+      GFS_2021:
+        common:
+          PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"
+        60km: # only available 20210122T18
+           #directory: "/glade/derecho/scratch/bedavis/GEFS_data/forecast/60km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60km_2021/ExtendedFC/{{FirstCycleDate}}/mean"
+          #maxMembers: 30
+          #memberFormat: "/{:02d}"
+        30km:
+          directory: "/glade/derecho/scratch/bedavis/GEFS_data/forecast/30km/EnsFCFirstCycle/{{FirstCycleDate}}"
+          maxMembers: 30
+          memberFormat: "/{:02d}"
+        60-10km-thompson: # only available 20210122T18
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-thompson_2021/ExtendedFC/{{FirstCycleDate}}/mean"
+        60-10km-wsm6:
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GFS_ForecastFromExternalAnalyses_60-10km-wsm6_2021/ExtendedFC/{{FirstCycleDate}}/mean"
       GEFS:
         common:
           PrepareFirstBackground: "LinkWarmStartBackgrounds => ForecastFinished__"

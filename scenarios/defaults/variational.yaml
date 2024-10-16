@@ -116,15 +116,33 @@ variational:
         GEFS:
           60km:
             maxMembers: 30
-            directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsForCov/{{prevDateTime}}'
+            #directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/60km/EnsForCov/{{prevDateTime}}'
+            directory0: '/glade/derecho/scratch/bedavis/GEFS_data/forecast/60km/EnsForCov/{{prevDateTime}}'
             memberPrefix:
             memberNDigits: 2
           30km:
             maxMembers: 30
-            directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsForCov/{{prevDateTime}}'
+            #directory0: '/glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/forecast/30km/EnsForCov/{{prevDateTime}}'
+            directory0: '/glade/derecho/scratch/bedavis/GEFS_data/forecast/30km/EnsForCov/{{prevDateTime}}'
+            memberPrefix:
+            memberNDigits: 2
+          60-10km-thompson:
+            maxMembers: 30
+            directory0: '/glade/derecho/scratch/nghido/GEFS_data/forecast/60-10km/EnsForCov/{{prevDateTime}}'
             memberPrefix:
             memberNDigits: 2
 
+            #GEFS_2021:
+            #60km:
+            #maxMembers: 30
+            #directory0: '/glade/derecho/scratch/bedavis/GEFS_data/forecast/60km/EnsForCov/{{prevDateTime}}'
+            #memberPrefix:
+            #memberNDigits: 2
+            #30km:
+            #maxMembers: 30
+            #directory0: '/glade/derecho/scratch/bedavis/GEFS_data/forecast/30km/EnsForCov/{{prevDateTime}}'
+            #memberPrefix:
+            #memberNDigits: 2
 
     # externally-produced localization files
     localization:
@@ -136,6 +154,7 @@ variational:
         bumpLocDir: /glade/campaign/mmm/parc/liuz/pandac_common/fixed_input/30km/bumploc/h=1200.0km_v=6.0km_06JAN2023code
       60km:
         bumpLocPrefix: bumploc_1200.0km_6.0km
+        #bumpLocDir: /glade/campaign/mmm/parc/liuz/pandac_common/fixed_input/60km/bumploc/h=1200.0km_v=6.0km_06JAN2023code_384pe
         bumpLocDir: /glade/campaign/mmm/parc/liuz/pandac_common/BUMP_files/derecho_2.1/60km.bumploc.duplicated.limited.1200km6km
       120km:
         bumpLocPrefix: bumploc_1200.0km_6.0km
@@ -183,7 +202,6 @@ variational:
 
       # cylc retry string
       retry: '0*PT30S'
-
     ## FORMAT
     #{{outerMesh}}:
     #  {{innerMesh}}:
@@ -228,11 +246,11 @@ variational:
             secondsPerEnVarMember: 10
       60km:
         3denvar:
-          nodes: 4 #2
-          PEPerNode: 64 #128
+          nodes: 8 #4 #2
+          PEPerNode: 32 #64 #128 #64 #128
           memory: 235GB
-          baseSeconds: 800
-          secondsPerEnVarMember: 9
+          baseSeconds: 600 #200
+          secondsPerEnVarMember: 12 #6
         4denvar:
           nodes: 14
           PEPerNode: 128
@@ -283,11 +301,11 @@ variational:
             secondsPerEnVarMember: 10
       60km:
         3denvar:
-          nodes: 4 #2
-          PEPerNode: 64 #128
+          nodes: 8 #4 #2
+          PEPerNode: 32 #64 #128 #64 #128
           memory: 235GB
-          baseSeconds: 800
-          secondsPerEnVarMember: 9
+          baseSeconds: 600 #200
+          secondsPerEnVarMember: 12 #6
         4denvar:
           nodes: 14
           PEPerNode: 128
@@ -393,11 +411,11 @@ variational:
             secondsPerEnVarMember: 10
       60km:
         3denvar:
-          nodes: 2
-          PEPerNode: 128
+          nodes: 8 #4 #2
+          PEPerNode: 32 #64 #128 #64 #128
           memory: 235GB
-          baseSeconds: 800
-          secondsPerEnVarMember: 9
+          baseSeconds: 600 #200
+          secondsPerEnVarMember: 12 #6
         4denvar:
           nodes: 14
           PEPerNode: 128
@@ -425,11 +443,11 @@ variational:
       # Assuming 60 total inner iterations
       60km:
         3denvar:
-          nodes: 4 #2
-          PEPerNode: 64 #128
+          nodes: 8 #4 #2
+          PEPerNode: 32 #64 #128 #64 #128
           memory: 235GB
-          baseSeconds: 800 #200
-          secondsPerEnVarMember: 9 #6
+          baseSeconds: 600 #200
+          secondsPerEnVarMember: 12 #6
         4denvar:
           nodes: 14 #7 subwindow slots
           PEPerNode: 128

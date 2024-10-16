@@ -32,18 +32,18 @@ class HPC(Component):
     # Derecho options: main
 
     # Critical*: used for all critical path jobs, single or multi-node, multi-processor only
-    'CriticalAccount': ['UCSD0047', str],
+    'CriticalAccount': ['UCSD0054', str],
     # override this below based on host
     'CriticalQueue': ['regular', str, ['economy', 'regular', 'premium']],
 
     # NonCritical*: used non-critical path jobs, single or multi-node, multi-processor only
-    'NonCriticalAccount': ['UCSD0047', str],
+    'NonCriticalAccount': ['UCSD0054', str],
     # override this below based on host
     'NonCriticalQueue': ['economy', str, ['economy', 'regular', 'premium']],
 
     # SingleProc*: used for single-processor jobs, both critical and non-critical paths
     # IMPORTANT: must NOT be executed on login node to comply with CISL requirements
-    'SingleProcAccount': ['UCSD0047', str],
+    'SingleProcAccount': ['UCSD0054', str],
     'SingleProcQueue': ['casper@casper-pbs', str, ['casper@casper-pbs', 'share']],
   }
   def __init__(self, config:Config):

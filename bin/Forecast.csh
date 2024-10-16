@@ -242,7 +242,8 @@ if ("${ArgUpdateSea}" == True) then
   else if ( $nMembers > 1 && "$firstbackground__resource" == "SIO.GEFS" ) then
     # using member-specific sst/xice data from GEFS, only works for this special case
     # 60km and 30km
-    setenv SeaAnaDir /glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/surface/$outerMesh/${thisValidDate}
+    #setenv SeaAnaDir /glade/campaign/univ/ucsd0043/nghi/da_c130/GEFS_data/surface/$outerMesh/${thisValidDate}
+    setenv SeaAnaDir /glade/derecho/scratch/bedavis/GEFS_data/surface/$outerMesh/${thisValidDate}
     setenv seaMemFmt "/{:02d}"
     setenv SeaFilePrefix x1.${nCells}.sfc_update
   else

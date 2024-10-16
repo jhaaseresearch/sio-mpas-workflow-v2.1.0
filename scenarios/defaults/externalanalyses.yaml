@@ -8,8 +8,8 @@ externalanalyses:
       directory: None
 
       ## filePrefix: prefix of analysis files
-      filePrefix: "x{{meshRatio}}.{{nCells}}.init"
-
+      #filePrefix: "x{{meshRatio}}.{{nCells}}.init"
+      filePrefix: "x1.{{nCells}}.init" 
       ## Vtable: variable table for UngribExternalAnalysis
       Vtable: None
 
@@ -49,6 +49,15 @@ externalanalyses:
           directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateGFSAnalyses_60-10km-thompson/ExternalAnalyses/60-10km-thompson/{{thisValidDate}}"
         60-10km-wsm6:
           directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateGFSAnalyses_60-10km-wsm6/ExternalAnalyses/60-10km-wsm6/{{thisValidDate}}"  
+      SIO_2021: # only available 20230218T18-20230220T18
+        30km:
+          directory: "/glade/derecho/scratch/bedavis/sio-cw3e/GenerateGFSAnalyses/ExternalAnalyses/30km/{{thisValidDate}}"
+        60km:
+          directory: "/glade/derecho/scratch/bedavis/sio-cw3e/GenerateGFSAnalyses/ExternalAnalyses/60km/{{thisValidDate}}"
+        60-10km-thompson:
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateGFSAnalyses_60-10km_2021/ExternalAnalyses/60-10km-thompson/{{thisValidDate}}"
+        60-10km-wsm6:
+          directory: "/glade/derecho/scratch/nghido/sio-mmm/GenerateGFSAnalyses_60-10km_2021/ExternalAnalyses/60-10km-thompson/{{thisValidDate}}" 
       RDA:
         common:
           PrepareExternalAnalysisTasks:
