@@ -8,8 +8,8 @@ externalanalyses:
       directory: None
 
       ## filePrefix: prefix of analysis files
-      #filePrefix: "x{{meshRatio}}.{{nCells}}.init"
-      filePrefix: "x1.{{nCells}}.init" 
+      filePrefix: "x{{meshRatio}}.{{nCells}}.init"
+      #filePrefix: "x1.{{nCells}}.init" 
       ## Vtable: variable table for UngribExternalAnalysis
       Vtable: None
 
